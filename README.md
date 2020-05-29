@@ -21,6 +21,31 @@
 
 <!-- MNIST vs FSDD picture -->
 
+TODO
+
+<table>
+    <tbody>
+        <tr>
+            <th align="center" width="50%">
+                <img src="./assets/mnist-7.png" height="100px"/>
+                <br/>
+                MNIST
+            </th>
+            <th align="center" width="50%">
+                <img src="./assets/fsdd-7.svg" height="100px"/>
+                <br/>
+                FSDD
+            </th>
+		</tr>
+    </tbody>
+</table>
+
+<p align="center">
+    <img src="./assets/mnist-7.png" height="100px"/>
+    <img src="./assets/blank.png" width="70px"/>
+    <img src="./assets/fsdd-7.svg" height="100px"/>
+</p>
+
 ## Methodology
 
 <!-- Talk about MFCCs (how many?) (how preprocessed) -->
