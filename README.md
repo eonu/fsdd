@@ -120,28 +120,54 @@ The diagram below shows the architecture that I used: a single-layer BiLSTM-RNN 
 The below hyper-parameter settings were found to be optimal (on the validation set):
 
 - **DTW k-NN**
-  - TODO
+  - <span><img src="./assets/maths/k.svg"/></span> (number of neighbors): **5**
+  - FastDTW radius (see <a href="#ref-4">[4]</a> for more information): **10**
+  - Distance weighting: **Uniform**
 - **BiLSTM-RNN**
-  - TODO
+  - Batch size (unchanged): **64**
+  - Number of epochs (unchanged): **15**
+  - Learning rate (unchanged): **0.002** with the Adam learning rule<sup><a href="#ref-5">[5]</a></sup>.
+  - Number of RNN layers (unchanged): **1**
+  - Number of RNN hidden state dimensions: **50**
+  - Number of units in fully-connected layer: **50**
 
-These settings achieved the following results on an 80% training, 10% validation and 10% test set split:
+These settings achieved the following test set results on an 80% training, 10% validation and 10% test set split:
 
-<!-- TODO: Table -->
+| Model      | Test accuracy (%) |
+| ---------- | ----------------- |
+| DTW k-NN   | 98.41             |
+| BiLSTM-RNN | 98.41             |
 
 ## Improvements
 
-<!-- TODO -->
+While promising results were achieved, this is likely as a result of the dataset being too simple. Below are a number of improvements that can be made, especially for more challenging datasets or audio classification tasks such as music genre classification.
 
-<!-- GRU -->
-<!-- Recurrent drop-out -->
-<!-- Talk about Mel spectrograms -->
-<!-- Talk about how it can be improved by sigment + specaugment, delta+deltadelta -->
-<!-- Deeper RNN -->
-<!-- CNN-LSTM (temporal convolutions) -->
+- **Gated Recurrent Units**: The Gated Recurrent Unit (GRU) is an alternative to the LSTM cell which still allows for long-term dependencies to be remembered. However, GRUs are more computationally efficient as they do not have to keep an internal cell state (in addition to the hidden state) unlike LSTMs.
+- **Recurrent drop-out**: The implemented LSTM uses drop-out after the recurrent layer and after the fully-connected layer. However, drop-out on the recurrent connections between time steps offers another form of regularization, improving the model's ability to generalize.
+- **Multi-layer RNNs**: As with standard feed-forward neural networks, the representational power or learning capacity of RNNs can often be improved by adding more layers (i.e. feeding the output of one RNN cell into an RNN cell in the next layer).
+- **CNN-LSTM**: As shown in diagrams above, MFCCs (as well as spectrograms) can be seen as a visual representation of audio. Convolutional Neural Networks (CNNs) are widely used in computer vision for learning features directly from images. One interesting approach to speech recognition could be to use CNNs to learn such features from the visual audio representation, and then feed these temporal features into a LSTM-RNN.
+- **(log)-Mel spectrograms**: The Mel spectrogram is an alternative form of audio representation, which is actually obtained as an intermediate step towards generating MFCCs. At the time of their conception, MFCCs were developed to overcome the issue of the Mel spectrogram being highly-correlated (as a result of overlapping during the windowing stage). Highly-correlated features posed a challenge when used with _traditional_ speech recognition systems based on Hidden Markov Models and Gaussian Mixture Models. However, such features are not as problematic for neural networks, meaning that computing the full MFCCs may not be necessary.
+- **Dynamic features**: MFCCs are a static representation of audio as they only capture information from a given frame. ∆ (delta) and ∆∆ (delta-delta) features are additional features that can be computed as the first and second order derivatives of the MFCCs, and can be combined with MFCCs to capture the dynamic nature of audio.
+- **Data augmentation**: When using log Mel-spectrograms for speech recognition, data augmentation for audio signals is often done on two levels:
+  - _Raw audio_: Transformations such as pitch shifting, time stretching, fading in/out, reverberation and white noise.
+  - _Spectrogram_: Frequency and time masking (see SpecAugment<sup><a href="#ref-6">[6]</a></sup>).
 
 ## Setup and Requirements
 
-<!-- TODO -->
+Package management for this project was done with `conda` (v4.8.2) and `pip` (v20.0.2), running on **`python` v3.7.4**.<br/>Below are the required packages for the project:
+
+- `jupyter` (v1.0.0)
+- `tqdm` (v4.46.0)
+- `librosa` (v0.7.2)
+- `numpy` (v1.18.1)
+- `sequentia` (v0.7.1)
+- `scikit-learn` (v0.22.1)
+- `matplotlib` (v3.1.3)
+- `pytorch` (v1.5.0)
+- `torchaudio` (v0.5.0)
+- `torchvision` (v0.6.0)
+- `pandas` (v1.0.3)
+- `seaborn` (v0.10.1)
 
 ## References
 
@@ -175,7 +201,23 @@ These settings achieved the following results on an 80% training, 10% validation
             <td>[4]</td>
             <td>
                 <a href="https://pdfs.semanticscholar.org/05a2/0cde15e172fc82f32774dd0cf4fe5827cad2.pdf">
-                    Stan Salvador, and Philip Chan. <b>"FastDTW: Toward accurate dynamic time warping in linear time and space."</b> Intelligent Data Analysis 11.5 (2007), 561-580.
+                    Stan Salvador, and Philip Chan. <b>"FastDTW: Toward accurate dynamic time warping in linear time and space"</b> Intelligent Data Analysis 11.5 (2007), 561-580.
+                </a>
+            </td>
+        </tr>
+        <tr id="ref-5">
+            <td>[5]</td>
+            <td>
+                <a href="https://arxiv.org/pdf/1412.6980.pdf">
+                    Diederik P. Kingma, and Jimmy Lei Ba. <b>"Adam: A Method For Stochastic Optimization"</b> Proceedings of the 3rd International Conference on Learning Representations (ICLR 2015).
+                </a>
+            </td>
+        </tr>
+        <tr id="ref-6">
+            <td>[6]</td>
+            <td>
+                <a href="https://ai.googleblog.com/2019/04/specaugment-new-data-augmentation.html">
+                    Daniel S. Park, William Chan, Yu Zhang, Chung-Cheng Chiu, Barret Zoph, Ekin D. Cubuk, Quoc V. Le. <b>"SpecAugment: A New Data Augmentation Method for Automatic Speech Recognition"</b> Google Brain (2019).
                 </a>
             </td>
         </tr>
