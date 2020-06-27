@@ -8,7 +8,7 @@
     <a href="#results"><b>Results</b></a><br/>
     <a href="#improvements">Improvements</a> ·
     <a href="#setup-and-requirements">Setup and Requirements</a> ·
-    <a href="#resources">Resources</a>
+    <a href="#references">References</a>
 </p>
 
 This repository contains the code that I used to perform isolated word recognition on the Free Spoken Digit Dataset consisting of trimmed audio signals of spoken digits.
